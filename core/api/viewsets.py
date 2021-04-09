@@ -1,4 +1,5 @@
 from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from core.models import PontoTuristico
@@ -7,6 +8,8 @@ from .serializers import PontoTuristicoSerializer
 class PontoTuristicoViewSet(ModelViewSet):
 #    queryset = PontoTuristico.objects.all() #lista todos os pontos turisticos
     serializer_class = PontoTuristicoSerializer  #quais os campos quero mostrar
+    filter_backends = (SearchFilter,)
+    search_fields = ('nome', 'descricao', 'endereco__linha1')
 
     def get_queryset(self):
         id = self.request.query_params.get('id', None)
