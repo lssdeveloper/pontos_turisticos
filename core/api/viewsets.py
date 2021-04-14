@@ -1,6 +1,6 @@
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissions
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -13,6 +13,7 @@ class PontoTuristicoViewSet(ModelViewSet):
     serializer_class = PontoTuristicoSerializer  # quais os campos quero mostrar
     filter_backends = (SearchFilter,)
     permission_classes = (IsAuthenticated,)
+    #permission_classes = (DjangoModelPermissions,)
     authentication_classes = (TokenAuthentication,)
     search_fields = ('nome', 'descricao', 'endereco__linha1')
     lookup_field = 'nome'
