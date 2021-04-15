@@ -16,18 +16,18 @@ class PontoTuristicoViewSet(ModelViewSet):
     #permission_classes = (DjangoModelPermissions,)
     authentication_classes = (TokenAuthentication,)
     search_fields = ('nome', 'descricao', 'endereco__linha1')
-    lookup_field = 'nome'
+    lookup_field = 'id'    #'nome'
 
     def get_queryset(self):
         id = self.request.query_params.get('id', None)
         nome = self.request.query_params.get('nome', None)
         descricao = self.request.query_params.get('descricao', None)
         queryset = PontoTuristico.objects.all()
-        if id:
+        if id is not None:
             queryset = PontoTuristico.objects.filter(pk=id)
-        if nome:
+        if nome is not None:
             queryset = queryset.filter(nome__iexact=nome)
-        if descricao:
+        if descricao is not None:
             queryset = queryset.filter(descricao__iexact=descricao)
 
         return queryset
@@ -61,3 +61,15 @@ class PontoTuristicoViewSet(ModelViewSet):
     @action(methods=['get'], detail=False)
     def teste(self, request):
         pass
+        # return super(PontoTuristicoViewSet, self).teste(request, *args, **kwargs)
+
+    @action(methods=['post'], detail=True)
+    def associa_atracoes(self, request, id):
+        atracoes = request.data['ids']
+
+        ponto = PontoTuristico.objects.get(id=id)
+
+        ponto.atracoes.set(atracoes)
+
+        ponto.save()
+        return HttpResponse('Ok')
